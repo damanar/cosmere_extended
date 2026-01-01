@@ -4,7 +4,9 @@ Fantasy Grounds extension for cosmere
 # Cosmere Extended
 
 A Fantasy Grounds extension for the Cosmere RPG ruleset
+
 Singer Forms that modify attributes based on your current form
+
 Defense Modifier window to add modifiers for talents.
 
 ## Features
