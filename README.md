@@ -14,9 +14,6 @@ This extension adds a Singer Form selector to the character sheet for characters
 - **Modifies Attributes**: Adds stat bonuses based on the selected form
 
 - **Dynamic Form Availability**: Forms are only available if the character has the required talents:
-  - **Forms of Resolve**: Unlocks Warform and Workform
-  - **Forms of Finesse**: Unlocks Artform and Nimbleform
-  - **Forms of Wisdom**: Unlocks Scholarform and Mediationform
 
 - **Deflect Calculation**: deflect value is automatically compared with equipped armor, using the higher value
 
