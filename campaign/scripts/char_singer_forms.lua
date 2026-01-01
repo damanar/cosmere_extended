@@ -50,6 +50,54 @@ local FORMS = {
 		statMods = {
 			willpower = 1
 		}
+	},
+	["Decayform"] = {
+		unlockTalent = "Forms of Mystery",
+		statMods = {
+			willpower = 2
+		}
+	},
+	["Direform"] = {
+		unlockTalent = "Forms of Destruction",
+		statMods = {
+			strength = 2
+		},
+		deflect = 2
+	},
+	["Envoyform"] = {
+		unlockTalent = "Forms of Expansion",
+		statMods = {
+			intellect = 1,
+			presence = 1
+		}
+	},
+	["Nightform"] = {
+		unlockTalent = "Forms of Mystery",
+		statMods = {
+			awareness = 1,
+			intellect = 1
+		},
+		focus = 2
+	},
+	["Relayform"] = {
+		unlockTalent = "Forms of Expansion",
+		statMods = {
+			speed = 2
+		}
+	},
+	["Stormform"] = {
+		unlockTalent = "Forms of Destruction",
+		statMods = {
+			strength = 1,
+			speed = 1
+		},
+		attack = {
+			name = "Unleash Lightning",
+			skill = "Discipline",
+			type = "energy",
+			value = "2d8"
+		},
+		deflect = 1
 	}
 };
 
@@ -137,6 +185,93 @@ local function addFormExpertises(nodeChar, tExpertises)
 	end
 end
 
+-- Remove form-granted attacks (only those we created)
+local function removeFormAttacks(nodeChar)
+	local nodeWeapons = DB.getChild(nodeChar, "weaponlist");
+	if not nodeWeapons then
+		return;
+	end
+	
+	local tToRemove = {};
+	for _, nodeWeapon in pairs(DB.getChildren(nodeWeapons)) do
+		local sSource = DB.getValue(nodeWeapon, "singerform.source", "");
+		if sSource == "form" then
+			table.insert(tToRemove, nodeWeapon);
+		end
+	end
+	
+	for _, nodeWeapon in ipairs(tToRemove) do
+		DB.deleteNode(nodeWeapon);
+	end
+end
+
+-- Add attack from a form
+local function addFormAttack(nodeChar, tAttack)
+	if not tAttack or not nodeChar then
+		return;
+	end
+	
+	local nodeWeapons = DB.getChild(nodeChar, "weaponlist");
+	if not nodeWeapons then
+		nodeWeapons = DB.createChild(nodeChar, "weaponlist");
+	end
+	
+	-- Check if attack already exists
+	for _, nodeExisting in pairs(DB.getChildren(nodeWeapons)) do
+		if DB.getValue(nodeExisting, "singerform.source", "") == "form" then
+			-- Update existing form attack
+			DB.setValue(nodeExisting, "name", "string", tAttack.name);
+			DB.setValue(nodeExisting, "weaponskill", "string", tAttack.skill);
+			DB.setValue(nodeExisting, "defense", "string", "spiritual"); -- Energy attacks typically target spiritual defense
+			
+			-- Parse damage and update damage list
+			local aDice, nMod = StringManager.convertStringToDice(tAttack.value);
+			local nodeDmgList = DB.getChild(nodeExisting, "damagelist");
+			if nodeDmgList then
+				DB.deleteChildren(nodeDmgList);
+			else
+				nodeDmgList = DB.createChild(nodeExisting, "damagelist");
+			end
+			
+			local nodeDmg = DB.createChild(nodeDmgList);
+			if nodeDmg then
+				DB.setValue(nodeDmg, "dice", "dice", aDice);
+				DB.setValue(nodeDmg, "stat", "string", tAttack.skill);
+				DB.setValue(nodeDmg, "bonus", "number", nMod);
+				DB.setValue(nodeDmg, "type", "string", tAttack.type);
+			end
+			
+			return; -- Attack updated, exit
+		end
+	end
+	
+	-- Create new attack
+	local nodeWeapon = DB.createChild(nodeWeapons, "formattack");
+	if nodeWeapon then
+		DB.setValue(nodeWeapon, "name", "string", tAttack.name);
+		DB.setValue(nodeWeapon, "weaponskill", "string", tAttack.skill);
+		DB.setValue(nodeWeapon, "type", "number", 1); -- Ranged (energy attack)
+		DB.setValue(nodeWeapon, "defense", "string", "spiritual"); -- Energy attacks typically target spiritual defense
+		DB.setValue(nodeWeapon, "carried", "number", 2); -- Equipped
+		DB.setValue(nodeWeapon, "singerform.source", "string", "form");
+		
+		-- Parse damage dice
+		local aDice, nMod = StringManager.convertStringToDice(tAttack.value);
+		
+		-- Create damage list
+		local nodeDmgList = DB.createChild(nodeWeapon, "damagelist");
+		if nodeDmgList then
+			local nodeDmg = DB.createChild(nodeDmgList);
+			if nodeDmg then
+				DB.setValue(nodeDmg, "dice", "dice", aDice);
+				DB.setValue(nodeDmg, "stat", "string", tAttack.skill);
+				DB.setValue(nodeDmg, "bonus", "number", nMod);
+				DB.setValue(nodeDmg, "type", "string", tAttack.type);
+			end
+		end
+	end
+end
+
 -- Recalculate deflect to use max of armor and form deflect
 local bAdjustingDeflect = false;
 local function recalculateDeflect(nodeChar)
@@ -144,8 +279,16 @@ local function recalculateDeflect(nodeChar)
 		return;
 	end
 	
-	-- Get armor deflect (current deflect value)
-	local nArmorDeflect = DB.getValue(nodeChar, "deflect", 0);
+	-- Calculate base armor deflect from equipped armor
+	local nArmorDeflect = 0;
+	for _, vNode in ipairs(DB.getChildList(nodeChar, "inventorylist")) do
+		if DB.getValue(vNode, "carried", 0) == 2 then
+			if ItemManager and ItemManager.isArmor and ItemManager.isArmor(vNode) then
+				nArmorDeflect = DB.getValue(vNode, "deflect", 0);
+				break; -- Only use the first equipped armor
+			end
+		end
+	end
 	
 	-- Get form deflect
 	local nFormDeflect = DB.getValue(nodeChar, "singerform.deflect", 0);
@@ -153,12 +296,10 @@ local function recalculateDeflect(nodeChar)
 	-- Use the larger value
 	local nFinalDeflect = math.max(nArmorDeflect, nFormDeflect);
 	
-	-- Update deflect if different
-	if nFinalDeflect ~= nArmorDeflect then
-		bAdjustingDeflect = true;
-		DB.setValue(nodeChar, "deflect", "number", nFinalDeflect);
-		bAdjustingDeflect = false;
-	end
+	-- Update deflect
+	bAdjustingDeflect = true;
+	DB.setValue(nodeChar, "deflect", "number", nFinalDeflect);
+	bAdjustingDeflect = false;
 end
 
 -- Apply form modifiers to character
@@ -189,6 +330,9 @@ local function applyFormModifiers(nodeChar, sFormName)
 	-- Remove form-granted expertises
 	removeFormExpertises(nodeChar);
 	
+	-- Remove form-granted attacks
+	removeFormAttacks(nodeChar);
+	
 	-- Clear deflect and focus modifiers
 	DB.setValue(nodeChar, "singerform.deflect", "number", 0);
 	DB.setValue(nodeChar, "focus.bonus", "number", 0);
@@ -204,6 +348,11 @@ local function applyFormModifiers(nodeChar, sFormName)
 		-- Apply expertises
 		if tFormData.expertises then
 			addFormExpertises(nodeChar, tFormData.expertises);
+		end
+		
+		-- Apply attack
+		if tFormData.attack then
+			addFormAttack(nodeChar, tFormData.attack);
 		end
 		
 		-- Apply deflect

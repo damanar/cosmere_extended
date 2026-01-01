@@ -4,29 +4,23 @@ Fantasy Grounds extension for cosmere
 # Cosmere Extended
 
 A Fantasy Grounds extension for the Cosmere RPG ruleset
-
-Singer Forms that modify attributes based on your current form
-
-Defense Modifier window to add modifiers for talents.
+- Singer Forms that modify attributes based on your current form
+- Defense Modifier window to add modifiers for talents.
 
 ## Features
 
 This extension adds a Singer Form selector to the character sheet for characters with the Singer ancestry. When a form is selected, it automatically:
 
 - **Modifies Attributes**: Adds stat bonuses based on the selected form
-  - **Warform**: +1 Strength, +1 Deflect
-  - **Workform**: +1 Willpower
-  - **Artform**: +1 Awareness, grants Painting and Music expertises
-  - **Nimbleform**: +1 Speed, +2 Focus
-  - **Scholarform**: +1 Intellect
-  - **Mediationform**: +1 Presence
 
 - **Dynamic Form Availability**: Forms are only available if the character has the required talents:
   - **Forms of Resolve**: Unlocks Warform and Workform
   - **Forms of Finesse**: Unlocks Artform and Nimbleform
   - **Forms of Wisdom**: Unlocks Scholarform and Mediationform
 
-- **Deflect Calculation**: Warform's deflect value is automatically compared with equipped armor, using the higher value
+- **Deflect Calculation**: deflect value is automatically compared with equipped armor, using the higher value
+
+- **Stormform's Unleash Lightning**: Adds this attack to your weapons.
 
 - **Combat Tracker Integration**: The active form appears as an effect in the combat tracker
 
