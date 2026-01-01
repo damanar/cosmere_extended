@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<root>
+    <string name="defense_modifiers_window_title">Defense Modifiers</string>
+    <string name="defense_modifiers_label_physical">PHYSICAL DEFENSE</string>
+    <string name="defense_modifiers_label_cognitive">COGNITIVE DEFENSE</string>
+    <string name="defense_modifiers_label_spiritual">SPIRITUAL DEFENSE</string>
+    <string name="defense_modifiers_label_derived">Derived:</string>
+    <string name="defense_modifiers_label_modifier">Modifier:</string>
+    <string name="defense_modifiers_label_total">Total:</string>
+    <string name="defense_modifiers_button_tooltip">Open Defense Modifiers</string>
+    <string name="singer_form_label">SINGER FORM</string>
+    <string name="singer_form_none">None</string>
+</root>
+

@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<root>
+	<windowclass name="charsheet_defense_modifiers">
+		<frame>recordsheet</frame>
+		<placement>
+			<size width="350" height="430" />
+		</placement>
+		<sizelimits>
+			<minimum width="350" height="430" />
+		</sizelimits>
+		<script file="campaign/scripts/char_defense_modifiers.lua" />
+		<sheetdata>
+			<windowmenubar_recordsheet name="menubar" />
+			
+			<anchor_content_recordsheet_top name="contentanchor" />
+			<anchor_content_recordsheet_bottom name="bottomanchor" />
+			
+			<!-- Physical Defense Section Frame -->
+			<area_content_framed_groupbox_narrow_top name="physical_frame">
+				<anchored height="110">
+					<left offset="10" />
+					<right offset="-10" />
+				</anchored>
+			</area_content_framed_groupbox_narrow_top>
+			
+			<label name="physical_label">
+				<anchored to="physical_frame" position="insidetopleft" offset="15,15">
+					<right offset="-15" />
+				</anchored>
+				<static textres="defense_modifiers_label_physical" />
+				<font>reference-b</font>
+			</label>
+			
+			<label name="physical_derived_label">
+				<anchored to="physical_label" position="below" offset="0,0">
+					<left offset="15" />
+				</anchored>
+				<static textres="defense_modifiers_label_derived" />
+				<font>sheetlabel</font>
+			</label>
+			<numberc_static name="physical_derived">
+				<anchored to="physical_derived_label" position="righthigh" offset="-60,0" width="60" />
+				<script>
+					local nodeChar;
+					function onInit()
+						nodeChar = window.getDatabaseNode();
+						updateValue();
+						DB.addHandler(DB.getPath(nodeChar, "attributes.strength.score"), "onUpdate", updateValue);
+						DB.addHandler(DB.getPath(nodeChar, "attributes.speed.score"), "onUpdate", updateValue);
+					end
+					function onClose()
+						if nodeChar then
+							DB.removeHandler(DB.getPath(nodeChar, "attributes.strength.score"), "onUpdate", updateValue);
+							DB.removeHandler(DB.getPath(nodeChar, "attributes.speed.score"), "onUpdate", updateValue);
+						end
+					end
+					function updateValue()
+						local nStr = DB.getValue(nodeChar, "attributes.strength.score", 0);
+						local nSpd = DB.getValue(nodeChar, "attributes.speed.score", 0);
+						setValue(10 + nStr + nSpd);
+						if window.updatePhysicalTotal then
+							window.updatePhysicalTotal();
+						end
+					end
+				</script>
+			</numberc_static>
+			
+			<label name="physical_modifier_label">
+				<anchored to="physical_derived_label" position="below" offset="0,0">
+					<left offset="0" />
+				</anchored>
+				<static textres="defense_modifiers_label_modifier" />
+				<font>sheetlabel</font>
+			</label>
+			<basicnumber name="physical_modifier" source="defenses.physicaldefense.modifier">
+				<anchored to="physical_modifier_label" position="righthigh" offset="-60,0" width="60" />
+				<script>
+					function onValueChanged()
+						if window.updatePhysicalTotal then
+							window.updatePhysicalTotal();
+						end
+					end
+				</script>
+			</basicnumber>
+			
+			<label name="physical_total_label">
+				<anchored to="physical_modifier_label" position="below" offset="0,0">
+					<left offset="15" />
+				</anchored>
+				<static textres="defense_modifiers_label_total" />
+				<font>reference-b</font>
+			</label>
+			<numberc_static name="physical_total">
+				<anchored to="physical_total_label" position="righthigh" offset="-60,0" width="60" />
+			</numberc_static>
+			
+			<!-- Cognitive Defense Section Frame -->
+			<genericcontrol name="cognitive_frame">
+				<anchored to="physical_frame" height="110">
+					<top anchor="bottom" offset="10" />
+					<left />
+					<right />
+				</anchored>
+				<frame name="groupbox" offset="10,10,10,10" />
+				<disabled />
+			</genericcontrol>
+			
+			<label name="cognitive_label">
+				<anchored to="cognitive_frame" position="insidetopleft" offset="15,15">
+					<right offset="-15" />
+				</anchored>
+				<static textres="defense_modifiers_label_cognitive" />
+				<font>reference-b</font>
+			</label>
+			
+			<label name="cognitive_derived_label">
+				<anchored to="cognitive_label" position="below" offset="0,0">
+					<left offset="15" />
+				</anchored>
+				<static textres="defense_modifiers_label_derived" />
+				<font>sheetlabel</font>
+			</label>
+			<numberc_static name="cognitive_derived">
+				<anchored to="cognitive_derived_label" position="righthigh" offset="-60,0" width="60" />
+				<script>
+					local nodeChar;
+					function onInit()
+						nodeChar = window.getDatabaseNode();
+						updateValue();
+						DB.addHandler(DB.getPath(nodeChar, "attributes.intellect.score"), "onUpdate", updateValue);
+						DB.addHandler(DB.getPath(nodeChar, "attributes.willpower.score"), "onUpdate", updateValue);
+					end
+					function onClose()
+						if nodeChar then
+							DB.removeHandler(DB.getPath(nodeChar, "attributes.intellect.score"), "onUpdate", updateValue);
+							DB.removeHandler(DB.getPath(nodeChar, "attributes.willpower.score"), "onUpdate", updateValue);
+						end
+					end
+					function updateValue()
+						local nInt = DB.getValue(nodeChar, "attributes.intellect.score", 0);
+						local nWil = DB.getValue(nodeChar, "attributes.willpower.score", 0);
+						setValue(10 + nInt + nWil);
+						if window.updateCognitiveTotal then
+							window.updateCognitiveTotal();
+						end
+					end
+				</script>
+			</numberc_static>
+			
+			<label name="cognitive_modifier_label">
+				<anchored to="cognitive_derived_label" position="below" offset="0,0">
+					<left offset="0" />
+				</anchored>
+				<static textres="defense_modifiers_label_modifier" />
+				<font>sheetlabel</font>
+			</label>
+			<basicnumber name="cognitive_modifier" source="defenses.cognitivedefense.modifier">
+				<anchored to="cognitive_modifier_label" position="righthigh" offset="-60,0" width="60" />
+				<script>
+					function onValueChanged()
+						if window.updateCognitiveTotal then
+							window.updateCognitiveTotal();
+						end
+					end
+				</script>
+			</basicnumber>
+			
+			<label name="cognitive_total_label">
+				<anchored to="cognitive_modifier_label" position="below" offset="0,0">
+					<left offset="15" />
+				</anchored>
+				<static textres="defense_modifiers_label_total" />
+				<font>reference-b</font>
+			</label>
+			<numberc_static name="cognitive_total">
+				<anchored to="cognitive_total_label" position="righthigh" offset="-60,0" width="60" />
+			</numberc_static>
+			
+			<!-- Spiritual Defense Section Frame -->
+			<genericcontrol name="spiritual_frame">
+				<anchored to="cognitive_frame" height="110">
+					<top anchor="bottom" offset="10" />
+					<left />
+					<right />
+				</anchored>
+				<frame name="groupbox" offset="10,10,10,10" />
+				<disabled />
+			</genericcontrol>
+			
+			<label name="spiritual_label">
+				<anchored to="spiritual_frame" position="insidetopleft" offset="15,15">
+					<right offset="-15" />
+				</anchored>
+				<static textres="defense_modifiers_label_spiritual" />
+				<font>reference-b</font>
+			</label>
+			
+			<label name="spiritual_derived_label">
+				<anchored to="spiritual_label" position="below" offset="0,0">
+					<left offset="15" />
+				</anchored>
+				<static textres="defense_modifiers_label_derived" />
+				<font>sheetlabel</font>
+			</label>
+			<numberc_static name="spiritual_derived">
+				<anchored to="spiritual_derived_label" position="righthigh" offset="-60,0" width="60" />
+				<script>
+					local nodeChar;
+					function onInit()
+						nodeChar = window.getDatabaseNode();
+						updateValue();
+						DB.addHandler(DB.getPath(nodeChar, "attributes.awareness.score"), "onUpdate", updateValue);
+						DB.addHandler(DB.getPath(nodeChar, "attributes.presence.score"), "onUpdate", updateValue);
+					end
+					function onClose()
+						if nodeChar then
+							DB.removeHandler(DB.getPath(nodeChar, "attributes.awareness.score"), "onUpdate", updateValue);
+							DB.removeHandler(DB.getPath(nodeChar, "attributes.presence.score"), "onUpdate", updateValue);
+						end
+					end
+					function updateValue()
+						local nAwa = DB.getValue(nodeChar, "attributes.awareness.score", 0);
+						local nPre = DB.getValue(nodeChar, "attributes.presence.score", 0);
+						setValue(10 + nAwa + nPre);
+						if window.updateSpiritualTotal then
+							window.updateSpiritualTotal();
+						end
+					end
+				</script>
+			</numberc_static>
+			
+			<label name="spiritual_modifier_label">
+				<anchored to="spiritual_derived_label" position="below" offset="0,0">
+					<left offset="0" />
+				</anchored>
+				<static textres="defense_modifiers_label_modifier" />
+				<font>sheetlabel</font>
+			</label>
+			<basicnumber name="spiritual_modifier" source="defenses.spiritualdefense.modifier">
+				<anchored to="spiritual_modifier_label" position="righthigh" offset="-60,0" width="60" />
+				<script>
+					function onValueChanged()
+						if window.updateSpiritualTotal then
+							window.updateSpiritualTotal();
+						end
+					end
+				</script>
+			</basicnumber>
+			
+			<label name="spiritual_total_label">
+				<anchored to="spiritual_modifier_label" position="below" offset="0,0">
+					<left offset="15" />
+				</anchored>
+				<static textres="defense_modifiers_label_total" />
+				<font>reference-b</font>
+			</label>
+			<numberc_static name="spiritual_total">
+				<anchored to="spiritual_total_label" position="righthigh" offset="-60,0" width="60" />
+			</numberc_static>
+			
+			<resize_recordsheet />
+		</sheetdata>
+	</windowclass>
+</root>
+

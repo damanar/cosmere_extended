@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root version="4.1">
+  <properties>
+    <name>Cosmere Extended</name>
+    <version>0.9</version>
+    <author>Your Name</author>
+    <ruleset>
+      <name>CosmereRPG</name>
+      <name>CoreRPG</name>
+    </ruleset>
+    <announcement text="Cosmere Extended v1.0.0" icon="button_details" font="emotefont" />
+  </properties>
+  <base>
+    <includefile source="campaign/record_char_defense_modifiers.xml" />
+    <includefile source="strings/strings_CosmereExtended.xml" />
+    <includefile source="campaign/record_char_main.xml" />
+    <script name="SingerForms" file="campaign/scripts/char_singer_forms.lua" />
+  </base>
+</root>
+
