@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<root>
+	
+	<windowclass name="char_main_weapons" merge="join">
+		<sheetdata>
+			<!-- Singer Form Selector - placed below weapons list -->
+			<header_content_framed_metalplate name="singer_form_header">
+				<anchored to="weapons" position="below" offset="0,10">
+					<left />
+					<right />
+				</anchored>
+				<static textres="singer_form_label" />
+			</header_content_framed_metalplate>
+			<comboboxc name="singer_form_selector" source="singerform.selected">
+				<anchored to="singer_form_header">
+					<left offset="10" />
+					<top offset="27" />
+					<right offset="-10" />
+				</anchored>
+				<parameters>
+					<defaultlabel>None</defaultlabel>
+				</parameters>
+			</comboboxc>
+		</sheetdata>
+		<script file="campaign/scripts/char_singer_forms.lua" />
+	</windowclass>
+	
+	<windowclass name="char_main_stats" merge="join">
+		<sheetdata>
+			<!-- Attribute Modifications for Singer Forms -->
+			<basicnumber name="strength" merge="replace">
+				<anchored to="physical_defense" position="lefthigh" offset="10,5" width="40" height="30" />
+				<script>
+					local nodeChar = nil;
+					function onInit()
+						nodeChar = window.getDatabaseNode();
+						if nodeChar then
+							DB.addHandler(DB.getPath(nodeChar, "attributes.strength.score"), "onUpdate", onSourceUpdate);
+							DB.addHandler(DB.getPath(nodeChar, "singerform.modifiers.strength"), "onUpdate", onSourceUpdate);
+							onSourceUpdate();
+						end
+					end
+					function onClose()
+						if nodeChar then
+							DB.removeHandler(DB.getPath(nodeChar, "attributes.strength.score"), "onUpdate", onSourceUpdate);
+							DB.removeHandler(DB.getPath(nodeChar, "singerform.modifiers.strength"), "onUpdate", onSourceUpdate);
+						end
+					end
+					function onSourceUpdate()
+						if not nodeChar then
+							nodeChar = window.getDatabaseNode();
+						end
+						local nBase = DB.getValue(nodeChar, "attributes.strength.score", 0);
+						local nMods = DB.getValue(nodeChar, "singerform.modifiers.strength", 0);
+						setValue(nBase + nMods);
+					end
+					function onValueChanged()
+						if not nodeChar then
+							nodeChar = window.getDatabaseNode();
+						end
+						-- When user edits, save to base attribute (subtracting modifier)
+						local nDisplayed = getValue();
+						local nMods = DB.getValue(nodeChar, "singerform.modifiers.strength", 0);
+						local nBase = nDisplayed - nMods;
+						DB.setValue(nodeChar, "attributes.strength.score", "number", nBase);
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="speed" merge="replace">
+				<anchored to="physical_defense" position="righthigh" offset="10,5" width="40" height="30" />
+				<script>
+					local nodeChar = nil;
+					function onInit()
+						nodeChar = window.getDatabaseNode();
+						if nodeChar then
+							DB.addHandler(DB.getPath(nodeChar, "attributes.speed.score"), "onUpdate", onSourceUpdate);
+							DB.addHandler(DB.getPath(nodeChar, "singerform.modifiers.speed"), "onUpdate", onSourceUpdate);
+							onSourceUpdate();
+						end
+					end
+					function onClose()
+						if nodeChar then
+							DB.removeHandler(DB.getPath(nodeChar, "attributes.speed.score"), "onUpdate", onSourceUpdate);
+							DB.removeHandler(DB.getPath(nodeChar, "singerform.modifiers.speed"), "onUpdate", onSourceUpdate);
+						end
+					end
+					function onSourceUpdate()
+						if not nodeChar then
+							nodeChar = window.getDatabaseNode();
+						end
+						local nBase = DB.getValue(nodeChar, "attributes.speed.score", 0);
+						local nMods = DB.getValue(nodeChar, "singerform.modifiers.speed", 0);
+						setValue(nBase + nMods);
+					end
+					function onValueChanged()
+						if not nodeChar then
+							nodeChar = window.getDatabaseNode();
+						end
+						-- When user edits, save to base attribute (subtracting modifier)
+						local nDisplayed = getValue();
+						local nMods = DB.getValue(nodeChar, "singerform.modifiers.speed", 0);
+						local nBase = nDisplayed - nMods;
+						DB.setValue(nodeChar, "attributes.speed.score", "number", nBase);
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="intellect" merge="replace">
+				<anchored to="cognitive_defense" position="lefthigh" offset="10,5" width="40" height="30" />
+				<script>
+					local nodeChar = nil;
+					function onInit()
+						nodeChar = window.getDatabaseNode();
+						if nodeChar then
+							DB.addHandler(DB.getPath(nodeChar, "attributes.intellect.score"), "onUpdate", onSourceUpdate);
+							DB.addHandler(DB.getPath(nodeChar, "singerform.modifiers.intellect"), "onUpdate", onSourceUpdate);
+							onSourceUpdate();
+						end
+					end
+					function onClose()
+						if nodeChar then
+							DB.removeHandler(DB.getPath(nodeChar, "attributes.intellect.score"), "onUpdate", onSourceUpdate);
+							DB.removeHandler(DB.getPath(nodeChar, "singerform.modifiers.intellect"), "onUpdate", onSourceUpdate);
+						end
+					end
+					function onSourceUpdate()
+						if not nodeChar then
+							nodeChar = window.getDatabaseNode();
+						end
+						local nBase = DB.getValue(nodeChar, "attributes.intellect.score", 0);
+						local nMods = DB.getValue(nodeChar, "singerform.modifiers.intellect", 0);
+						setValue(nBase + nMods);
+					end
+					function onValueChanged()
+						if not nodeChar then
+							nodeChar = window.getDatabaseNode();
+						end
+						-- When user edits, save to base attribute (subtracting modifier)
+						local nDisplayed = getValue();
+						local nMods = DB.getValue(nodeChar, "singerform.modifiers.intellect", 0);
+						local nBase = nDisplayed - nMods;
+						DB.setValue(nodeChar, "attributes.intellect.score", "number", nBase);
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="willpower" merge="replace">
+				<anchored to="cognitive_defense" position="righthigh" offset="10,5" width="40" height="30" />
+				<script>
+					local nodeChar = nil;
+					function onInit()
+						nodeChar = window.getDatabaseNode();
+						if nodeChar then
+							DB.addHandler(DB.getPath(nodeChar, "attributes.willpower.score"), "onUpdate", onSourceUpdate);
+							DB.addHandler(DB.getPath(nodeChar, "singerform.modifiers.willpower"), "onUpdate", onSourceUpdate);
+							onSourceUpdate();
+						end
+					end
+					function onClose()
+						if nodeChar then
+							DB.removeHandler(DB.getPath(nodeChar, "attributes.willpower.score"), "onUpdate", onSourceUpdate);
+							DB.removeHandler(DB.getPath(nodeChar, "singerform.modifiers.willpower"), "onUpdate", onSourceUpdate);
+						end
+					end
+					function onSourceUpdate()
+						if not nodeChar then
+							nodeChar = window.getDatabaseNode();
+						end
+						local nBase = DB.getValue(nodeChar, "attributes.willpower.score", 0);
+						local nMods = DB.getValue(nodeChar, "singerform.modifiers.willpower", 0);
+						setValue(nBase + nMods);
+					end
+					function onValueChanged()
+						if not nodeChar then
+							nodeChar = window.getDatabaseNode();
+						end
+						-- When user edits, save to base attribute (subtracting modifier)
+						local nDisplayed = getValue();
+						local nMods = DB.getValue(nodeChar, "singerform.modifiers.willpower", 0);
+						local nBase = nDisplayed - nMods;
+						DB.setValue(nodeChar, "attributes.willpower.score", "number", nBase);
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="awareness" merge="replace">
+				<anchored to="spiritual_defense" position="lefthigh" offset="10,5" width="40" height="30" />
+				<script>
+					local nodeChar = nil;
+					function onInit()
+						nodeChar = window.getDatabaseNode();
+						if nodeChar then
+							DB.addHandler(DB.getPath(nodeChar, "attributes.awareness.score"), "onUpdate", onSourceUpdate);
+							DB.addHandler(DB.getPath(nodeChar, "singerform.modifiers.awareness"), "onUpdate", onSourceUpdate);
+							onSourceUpdate();
+						end
+					end
+					function onClose()
+						if nodeChar then
+							DB.removeHandler(DB.getPath(nodeChar, "attributes.awareness.score"), "onUpdate", onSourceUpdate);
+							DB.removeHandler(DB.getPath(nodeChar, "singerform.modifiers.awareness"), "onUpdate", onSourceUpdate);
+						end
+					end
+					function onSourceUpdate()
+						if not nodeChar then
+							nodeChar = window.getDatabaseNode();
+						end
+						local nBase = DB.getValue(nodeChar, "attributes.awareness.score", 0);
+						local nMods = DB.getValue(nodeChar, "singerform.modifiers.awareness", 0);
+						setValue(nBase + nMods);
+					end
+					function onValueChanged()
+						if not nodeChar then
+							nodeChar = window.getDatabaseNode();
+						end
+						-- When user edits, save to base attribute (subtracting modifier)
+						local nDisplayed = getValue();
+						local nMods = DB.getValue(nodeChar, "singerform.modifiers.awareness", 0);
+						local nBase = nDisplayed - nMods;
+						DB.setValue(nodeChar, "attributes.awareness.score", "number", nBase);
+					end
+				</script>
+			</basicnumber>
+			<basicnumber name="presence" merge="replace">
+				<anchored to="spiritual_defense" position="righthigh" offset="10,5" width="40" height="30" />
+				<script>
+					local nodeChar = nil;
+					function onInit()
+						nodeChar = window.getDatabaseNode();
+						if nodeChar then
+							DB.addHandler(DB.getPath(nodeChar, "attributes.presence.score"), "onUpdate", onSourceUpdate);
+							DB.addHandler(DB.getPath(nodeChar, "singerform.modifiers.presence"), "onUpdate", onSourceUpdate);
+							onSourceUpdate();
+						end
+					end
+					function onClose()
+						if nodeChar then
+							DB.removeHandler(DB.getPath(nodeChar, "attributes.presence.score"), "onUpdate", onSourceUpdate);
+							DB.removeHandler(DB.getPath(nodeChar, "singerform.modifiers.presence"), "onUpdate", onSourceUpdate);
+						end
+					end
+					function onSourceUpdate()
+						if not nodeChar then
+							nodeChar = window.getDatabaseNode();
+						end
+						local nBase = DB.getValue(nodeChar, "attributes.presence.score", 0);
+						local nMods = DB.getValue(nodeChar, "singerform.modifiers.presence", 0);
+						setValue(nBase + nMods);
+					end
+					function onValueChanged()
+						if not nodeChar then
+							nodeChar = window.getDatabaseNode();
+						end
+						-- When user edits, save to base attribute (subtracting modifier)
+						local nDisplayed = getValue();
+						local nMods = DB.getValue(nodeChar, "singerform.modifiers.presence", 0);
+						local nBase = nDisplayed - nMods;
+						DB.setValue(nodeChar, "attributes.presence.score", "number", nBase);
+					end
+				</script>
+			</basicnumber>
+			
+			<!-- Physical Defense with Modifier -->
+			<number_linked_framed name="physical_defense" source="defenses.physicaldefense.score" merge="replace">
+				<anchored to="physical_header" width="40" height="40">
+					<left anchor="center" offset="-20"/>
+					<top relation="relative" offset="7" />
+				</anchored>
+				<frame name="deficon" offset="-3,0,2,-4" />
+				<source><name>attributes.strength.score</name><op>+</op></source>
+				<source><name>attributes.speed.score</name><op>+</op></source>
+				<source><name>defenses.physicaldefense.modifier</name><op>+</op></source>
+				<script>
+					function onSourceUpdate()
+						local nValue = calculateSources();
+						setValue(10 + nValue);
+					end
+				</script>
+			</number_linked_framed>
+			<button_details name="physical_defense_button">
+				<anchored to="physical_defense" position="righthigh" offset="-5,20" width="10" height="10" />
+				<tooltip textres="defense_modifiers_button_tooltip" />
+				<script>
+					function onButtonPress()
+						local nodeChar = window.getDatabaseNode();
+						Interface.openWindow("charsheet_defense_modifiers", nodeChar);
+					end
+				</script>
+			</button_details>
+			
+			<!-- Cognitive Defense with Modifier -->
+			<number_linked_framed name="cognitive_defense" source="defenses.cognitivedefense.score" merge="replace">
+				<anchored to="cognitive_header" width="40" height="40">
+					<left anchor="center" offset="-20"/>
+					<top relation="relative" offset="7" />
+				</anchored>
+				<frame name="deficon" offset="-3,0,2,-4" />
+				<source><name>attributes.intellect.score</name><op>+</op></source>
+				<source><name>attributes.willpower.score</name><op>+</op></source>
+				<source><name>defenses.cognitivedefense.modifier</name><op>+</op></source>
+				<script>
+					function onSourceUpdate()
+						local nValue = calculateSources();
+						setValue(10 + nValue);
+					end
+				</script>
+			</number_linked_framed>
+			<button_details name="cognitive_defense_button">
+				<anchored to="cognitive_defense" position="righthigh" offset="-5,20" width="10" height="10" />
+				<tooltip textres="defense_modifiers_button_tooltip" />
+				<script>
+					function onButtonPress()
+						local nodeChar = window.getDatabaseNode();
+						Interface.openWindow("charsheet_defense_modifiers", nodeChar);
+					end
+				</script>
+			</button_details>
+			
+			<!-- Spiritual Defense with Modifier -->
+			<number_linked_framed name="spiritual_defense" source="defenses.spiritualdefense.score" merge="replace">
+				<anchored to="spiritual_header" width="40" height="40">
+					<left anchor="center" offset="-20"/>
+					<top relation="relative" offset="7" />
+				</anchored>
+				<frame name="deficon" offset="-3,0,2,-4" />
+				<source><name>attributes.awareness.score</name><op>+</op></source>
+				<source><name>attributes.presence.score</name><op>+</op></source>
+				<source><name>defenses.spiritualdefense.modifier</name><op>+</op></source>
+				<script>
+					function onSourceUpdate()
+						local nValue = calculateSources();
+						setValue(10 + nValue);
+					end
+				</script>
+			</number_linked_framed>
+			<button_details name="spiritual_defense_button">
+				<anchored to="spiritual_defense" position="righthigh" offset="-5,20" width="10" height="10" />
+				<tooltip textres="defense_modifiers_button_tooltip" />
+				<script>
+					function onButtonPress()
+						local nodeChar = window.getDatabaseNode();
+						Interface.openWindow("charsheet_defense_modifiers", nodeChar);
+					end
+				</script>
+			</button_details>
+		</sheetdata>
+	</windowclass>
+</root>
