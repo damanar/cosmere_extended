@@ -1,6 +1,17 @@
 # cosmere_extended
 Fantasy Grounds extension for cosmere
 
+## Installation
+
+1. Click CosmereExtended.ext, Then the download button in the far right that states Download raw file.
+2. Copy the .ext to your Fantasy Grounds extensions directory:
+   - **Windows**: `%APPDATA%\Fantasy Grounds\extensions\`
+   - **Mac**: `~/Library/Application Support/Fantasy Grounds/extensions/`
+   - **Linux**: `~/.config/Fantasy Grounds/extensions/`
+3. Start Fantasy Grounds
+4. When creating or loading a campaign, enable the "Cosmere Extended" extension in the extension selection window
+5. The extension will automatically load for campaigns using the CosmereRPG ruleset
+
 # Cosmere Extended
 
 A Fantasy Grounds extension for the Cosmere RPG ruleset
@@ -28,17 +39,6 @@ This extension adds a Singer Form selector to the character sheet for characters
   - **Cognitive Defense**: Shows derived value (10 + Intellect + Willpower), allows manual modifier input, and displays total
   - **Spiritual Defense**: Shows derived value (10 + Awareness + Presence), allows manual modifier input, and displays total
   - Modifier values are automatically applied to defense calculations on the character sheet
-
-## Installation
-
-1. Download this repository as a zip and rename it to .ext instead of .zip
-2. Copy the .ext to your Fantasy Grounds extensions directory:
-   - **Windows**: `%APPDATA%\Fantasy Grounds\extensions\`
-   - **Mac**: `~/Library/Application Support/Fantasy Grounds/extensions/`
-   - **Linux**: `~/.config/Fantasy Grounds/extensions/`
-3. Start Fantasy Grounds
-4. When creating or loading a campaign, enable the "Cosmere Extended" extension in the extension selection window
-5. The extension will automatically load for campaigns using the CosmereRPG ruleset
 
 ## Usage
 
